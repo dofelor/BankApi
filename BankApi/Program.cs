@@ -18,13 +18,18 @@ namespace BankApi
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                });
             builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
             builder.Services.AddSingleton<ICardNumberGenerator, CardNumberGenerator>();
             builder.Services.AddSingleton<IAccountNumberGenerator, AccountNumberGenerator>();
             builder.Services.AddScoped <IClientService, ClientService>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+            builder.Services.AddScoped<IPhoneService, PhoneService>();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
