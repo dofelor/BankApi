@@ -61,17 +61,10 @@ public class ClientsController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteClient(int id)
     {
-        try
-        {
-            var isDeleted = await _clientService.DeleteClientAsync(id);
+        var isDeleted = await _clientService.DeleteClientAsync(id);
 
-            if (!isDeleted) return NotFound($"Client with ID = {id} not found.");
+        if (!isDeleted) return NotFound($"Client with ID = {id} not found.");
 
-            return NoContent();
-        }
-        catch(InvalidOperationException ex)
-        {
-            return BadRequest(new {message = ex.Message});
-        }
+        return NoContent();
     }
 }

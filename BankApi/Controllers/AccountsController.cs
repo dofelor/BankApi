@@ -19,15 +19,9 @@ namespace BankApi.Controllers
         [HttpPost("client/{clientId:int}")]
         public async Task<ActionResult<BankAccountResponseDto>> CreateAccount(int clientId, [FromBody] CreateAccountDto dto)
         {
-            try
-            {
-                var result = await _accountService.CreateAccountAsync(clientId, dto);
-                return CreatedAtAction(nameof(GetAccountById), new { id = result.Id }, result);
-            }
-            catch(KeyNotFoundException ex)
-            {
-                return NotFound(new {message = ex.Message});
-            }
+
+            var result = await _accountService.CreateAccountAsync(clientId, dto);
+            return CreatedAtAction(nameof(GetAccountById), new { id = result.Id }, result);
         }
 
         [HttpGet("{id:int}")]
@@ -44,34 +38,20 @@ namespace BankApi.Controllers
         [HttpGet("client/{clientId:int}")]
         public async Task<ActionResult<List<BankAccountResponseDto>>> GetAccountsByClientId(int clientId)
         {
-            try
-            {
-                var accounts = await _accountService.GetAccountsByClientIdAsync(clientId);
-                return Ok(accounts);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new {message = ex.Message});
-            }
+             var accounts = await _accountService.GetAccountsByClientIdAsync(clientId);
+             return Ok(accounts);
             
         }
 
         [HttpPatch("{id:int}/close")]
         public async Task<ActionResult> CloseAccount(int id)
         {
-            try
+            var isClosed = await _accountService.CloseAccountAsync(id);
+            if (!isClosed)
             {
-                var isClosed = await _accountService.CloseAccountAsync(id);
-                if (!isClosed)
-                {
-                    return NotFound($"Account with Id = {id} not found.");
-                }
-                return NoContent();
+                return NotFound($"Account with Id = {id} not found.");
             }
-            catch(InvalidOperationException ex)
-            {
-                return BadRequest(new {message = ex.Message});
-            }
+            return NoContent();
         }
     }
 }

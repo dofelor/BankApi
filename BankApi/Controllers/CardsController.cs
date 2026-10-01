@@ -21,20 +21,8 @@ namespace BankApi.Controllers
         [HttpPost("account/{accountId:int}")]
         public async Task<ActionResult<CardResponseDto>> CreateCard(int accountId, [FromBody] CreateCardDto dto)
         {
-
-            try
-            {
-                var card = await _cardService.CreateCardAsync(accountId, dto);
-                return CreatedAtAction(nameof(GetCardById), new { id = card.Id }, card);
-            }
-            catch(KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var card = await _cardService.CreateCardAsync(accountId, dto);
+            return CreatedAtAction(nameof(GetCardById), new { id = card.Id }, card);
             
         }
 
@@ -50,31 +38,15 @@ namespace BankApi.Controllers
         [HttpGet("account/{accountId:int}")]
         public async Task<ActionResult<List<CardResponseDto>>> GetCardsByAccountId(int accountId)
         {
-            try
-            {
-                var cards = await _cardService.GetCardsByAccountIdAsync(accountId);
-                return Ok(cards);
-            }
-            catch(KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var cards = await _cardService.GetCardsByAccountIdAsync(accountId);
+            return Ok(cards);
         }
 
         [HttpPatch("{id:int}/block")]
         public async Task<ActionResult> BlockCard(int id)
         {
-            try
-            {
-                var result = await _cardService.BlockCardAsync(id);
-                if (!result) return NotFound();
-            }
-            catch (InvalidOperationException ex)
-            {
-                BadRequest(ex.Message);
-            }
-
-            
+            var result = await _cardService.BlockCardAsync(id);
+            if (!result) return NotFound();
 
             return NoContent();
         }
@@ -82,15 +54,8 @@ namespace BankApi.Controllers
         [HttpPatch("{id:int}/unblock")]
         public async Task<IActionResult> UnblockCard(int id)
         {
-            try
-            {
-                var result = await _cardService.UnblockCardAsync(id);
-                if (!result) return NotFound();
-            }
-            catch (InvalidOperationException ex)
-            {
-                BadRequest(ex.Message);
-            }
+            var result = await _cardService.UnblockCardAsync(id);
+            if (!result) return NotFound();
 
 
             return NoContent();
