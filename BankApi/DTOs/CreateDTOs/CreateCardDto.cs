@@ -5,7 +5,6 @@ namespace BankApi.DTOs.CreateDTOs
 {
     public class CreateCardDto
     {
-        [Required]
         public CardType CardType { get; set; }
 
     }
