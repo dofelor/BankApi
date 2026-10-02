@@ -21,6 +21,7 @@ namespace BankApi.Mappings
 
             CreateMap<CreateCardDto, Card>();
             CreateMap<Card,  CardResponseDto>();
+            CreateMap<TransactionLog, TransactionLogResponseDto>();
         }
     }
 }

@@ -69,7 +69,7 @@ namespace BankApi.Services
             var phone = await _context.Phones.FindAsync(id);
             if (phone == null) return false;
 
-            _context.Phones.Remove(phone);
+            phone.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

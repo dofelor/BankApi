@@ -66,7 +66,7 @@ namespace BankApi.Services
                 throw new InvalidOperationException("Cannot delete a client with active bank accounts.");
             }
 
-            _context.Clients.Remove(client);
+            client.IsDeleted = true;
             await _context.SaveChangesAsync();
 
             return true;

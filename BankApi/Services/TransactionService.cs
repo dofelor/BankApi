@@ -1,4 +1,5 @@
-﻿using BankApi.Data;
+﻿using BankApi.Data.Models;
+using BankApi.Data;
 using BankApi.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,6 +49,21 @@ public class TransactionService : ITransactionService
             fromAccount.Balance -= dto.Amount;
             toAccount.Balance += dto.Amount;
 
+            await _context.SaveChangesAsync();
+
+            var log = new TransactionLog
+            {
+                FromAccountId = fromAccount.Id,
+                FromAccountNumber = fromAccount.AccountNumber,
+                ToAccountId = toAccount.Id,
+                ToAccountNumber = toAccount.AccountNumber,
+                Amount = dto.Amount,
+                Currency = fromAccount.Currency,
+                CreatedAt = DateTime.UtcNow,
+                Description = "Transfer"
+            };
+
+            _context.TransactionLogs.Add(log);
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
         }

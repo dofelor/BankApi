@@ -8,6 +8,7 @@
         public string? MiddleName { get; set;  }
         public string Email { get; set; } = string.Empty;
         public DateOnly BirthDate{ get; set; }
+        public bool IsDeleted { get; set; }
         public string FullName => string.IsNullOrWhiteSpace(MiddleName)
             ? $"{LastName} {FirstName}".Trim()
             : $"{LastName} {FirstName} {MiddleName}".Trim();

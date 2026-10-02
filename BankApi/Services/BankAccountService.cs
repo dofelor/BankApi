@@ -120,7 +120,22 @@ namespace BankApi.Services
                 throw new InvalidOperationException("Cannot add balance to a closed account.");
             }
 
+            // Обновляем баланс и логируем операцию в рамках одной транзакции
             account.Balance += amount;
+
+            var log = new TransactionLog
+            {
+                FromAccountId = null,
+                FromAccountNumber = string.Empty,
+                ToAccountId = account.Id,
+                ToAccountNumber = account.AccountNumber,
+                Amount = amount,
+                Currency = account.Currency,
+                CreatedAt = DateTime.UtcNow,
+                Description = "Deposit"
+            };
+
+            _context.TransactionLogs.Add(log);
             await _context.SaveChangesAsync();
 
             return _mapper.Map<BankAccountResponseDto>(account);
