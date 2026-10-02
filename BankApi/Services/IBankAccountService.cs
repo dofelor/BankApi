@@ -9,5 +9,6 @@ namespace BankApi.Services
         Task<BankAccountResponseDto?> GetAccountByIdAsync(int id);
         Task<List<BankAccountResponseDto>> GetAccountsByClientIdAsync(int clientId);
         Task<bool> CloseAccountAsync(int id);
+        Task<BankAccountResponseDto> AddBalanceAsync(int accountId, decimal amount);
     }
 }

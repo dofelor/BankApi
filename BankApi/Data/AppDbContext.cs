@@ -11,8 +11,6 @@ public class AppDbContext : DbContext
     public DbSet<BankAccount> BankAccounts { get; set; }
     public DbSet<Card> Cards { get; set; }
     public DbSet<Phone> Phones { get; set; }
-    public DbSet<TransactionLog> TransactionLogs { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

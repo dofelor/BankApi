@@ -100,5 +100,31 @@ namespace BankApi.Services
             return true;
         }
 
+        public async Task<BankAccountResponseDto> AddBalanceAsync(int accountId, decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new InvalidOperationException("Amount must be greater than zero.");
+            }
+
+            var account = await _context.BankAccounts
+                .FirstOrDefaultAsync(b => b.Id == accountId);
+
+            if (account == null)
+            {
+                throw new KeyNotFoundException($"Account with ID = {accountId} not found.");
+            }
+
+            if (account.IsClosed)
+            {
+                throw new InvalidOperationException("Cannot add balance to a closed account.");
+            }
+
+            account.Balance += amount;
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<BankAccountResponseDto>(account);
+        }
+
     }
 }

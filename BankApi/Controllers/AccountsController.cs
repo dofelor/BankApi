@@ -1,4 +1,5 @@
-﻿using BankApi.DTOs.CreateDTOs;
+﻿using BankApi.DTOs;
+using BankApi.DTOs.CreateDTOs;
 using BankApi.DTOs.ResponseDTOs;
 using BankApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,13 @@ namespace BankApi.Controllers
                 return NotFound($"Account with Id = {id} not found.");
             }
             return NoContent();
+        }
+
+        [HttpPost("{id:int}/deposit")]
+        public async Task<ActionResult<BankAccountResponseDto>> AddBalance(int id, [FromBody] AddBalanceDto dto)
+        {
+            var updated = await _accountService.AddBalanceAsync(id, dto.Amount);
+            return Ok(updated);
         }
     }
 }
