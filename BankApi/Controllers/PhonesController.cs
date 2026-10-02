@@ -32,7 +32,7 @@ namespace BankApi.Controllers
             return Ok(phone);
         }
 
-        [HttpGet("client/{clinentId:int}")]
+        [HttpGet("client/{clientId:int}")]
         public async Task<ActionResult<List<PhoneResponseDto>>> GetPhonesByClientId(int clientId)
         {
             var phones = await _phoneService.GetPhonesByClientIdAsync(clientId);

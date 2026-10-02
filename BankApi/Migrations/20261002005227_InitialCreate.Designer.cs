@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BankApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261001102644_InitialCreate")]
+    [Migration("20261002005227_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -159,7 +159,7 @@ namespace BankApi.Migrations
                     b.HasOne("BankApi.Data.Models.Client", "Client")
                         .WithMany("BankAccounts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");

@@ -15,6 +15,6 @@ namespace BankApi.DTOs.CreateDTOs
 
         public DateOnly BirthDate { get; set; }
 
-        public List<CreatePhoneDto> Phones { get; set; } = new();
+        public List<CreatePhoneDto> PhoneNumbers { get; set; } = new();
     }
 }

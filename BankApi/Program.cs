@@ -36,6 +36,7 @@ namespace BankApi
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
             builder.Services.AddScoped<ICardService, CardService>();
             builder.Services.AddScoped<IPhoneService, PhoneService>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();

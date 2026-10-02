@@ -32,12 +32,12 @@ namespace BankApi.Infrastructure.Validators
                 .Must(BeValidAge)
                 .WithMessage("An incorrect date of birth has been entered.");
 
-            RuleFor(c => c.Phones)
+            RuleFor(c => c.PhoneNumbers)
                 .NotEmpty().WithMessage("The client must have at least one telephone number")
                 .Must(phones => phones.Select(p => p.PhoneNumber).Distinct().Count() == phones.Count)
                 .WithMessage("Phone numbers in the list must not be repeated.");
 
-            RuleForEach(c => c.Phones).SetValidator(phoneValidator);
+            RuleForEach(c => c.PhoneNumbers).SetValidator(phoneValidator);
         }
 
         private static bool BeAtLeast18YearsOld(DateOnly birthDate)

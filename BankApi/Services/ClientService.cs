@@ -55,15 +55,16 @@ namespace BankApi.Services
         }
         public async Task<bool> DeleteClientAsync(int id)
         {
-            bool hasBankAccounts = await _context.BankAccounts.AnyAsync(b => b.ClientId == id);
-
-            if (hasBankAccounts)
-            {
-                throw new InvalidOperationException("A client with open bank accounts cannot be deleted.");
-            }
-
             var client = await _context.Clients.FindAsync(id);
-            if(client == null) return false;
+            if (client == null) return false;
+
+            bool hasOpenAccounts = await _context.BankAccounts
+                .AnyAsync(b => b.ClientId == id && !b.IsClosed);
+
+            if (hasOpenAccounts)
+            {
+                throw new InvalidOperationException("Cannot delete a client with active bank accounts.");
+            }
 
             _context.Clients.Remove(client);
             await _context.SaveChangesAsync();

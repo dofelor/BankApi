@@ -11,6 +11,7 @@
         public string FullName => string.IsNullOrWhiteSpace(MiddleName)
             ? $"{LastName} {FirstName}".Trim()
             : $"{LastName} {FirstName} {MiddleName}".Trim();
+
         public ICollection<Phone> PhoneNumbers { get; set; } = new List<Phone>();
         public ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
 

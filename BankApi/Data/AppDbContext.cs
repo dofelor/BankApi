@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<BankAccount> BankAccounts { get; set; }
     public DbSet<Card> Cards { get; set; }
     public DbSet<Phone> Phones { get; set; }
+    public DbSet<TransactionLog> TransactionLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,12 +29,13 @@ public class AppDbContext : DbContext
             entity.HasMany(c => c.BankAccounts)
                 .WithOne(b => b.Client)
                 .HasForeignKey(b => b.ClientId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<BankAccount>(entity =>
         {
             entity.HasIndex(b => b.AccountNumber).IsUnique();
+
 
             entity.Property(b => b.Balance)
                 .HasPrecision(18, 2);

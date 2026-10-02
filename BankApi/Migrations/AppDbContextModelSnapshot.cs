@@ -55,7 +55,7 @@ namespace BankApi.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("BankAccounts");
+                    b.ToTable("BankAccounts", (string)null);
                 });
 
             modelBuilder.Entity("BankApi.Data.Models.Card", b =>
@@ -89,7 +89,7 @@ namespace BankApi.Migrations
                     b.HasIndex("CardNumber")
                         .IsUnique();
 
-                    b.ToTable("Cards");
+                    b.ToTable("Cards", (string)null);
                 });
 
             modelBuilder.Entity("BankApi.Data.Models.Client", b =>
@@ -123,7 +123,7 @@ namespace BankApi.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("BankApi.Data.Models.Phone", b =>
@@ -148,7 +148,7 @@ namespace BankApi.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Phones");
+                    b.ToTable("Phones", (string)null);
                 });
 
             modelBuilder.Entity("BankApi.Data.Models.BankAccount", b =>
@@ -156,7 +156,7 @@ namespace BankApi.Migrations
                     b.HasOne("BankApi.Data.Models.Client", "Client")
                         .WithMany("BankAccounts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
