@@ -1,30 +1,30 @@
+version: '3.8'
 services:
-  bank_db:
-    image: postgres:16-alpine
-    container_name: bank_postgres_db
-    environment:
-      POSTGRES_USER: bank_admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: bank_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   bankapi:
-    image: ${DOCKER_REGISTRY-}bankapi
     build:
       context: .
       dockerfile: BankApi/Dockerfile
+    image: bankapi:latest
     ports:
       - "8080:8080"
-      - "8081:8081"
-    depends_on:
-      - bank_db
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__PostgresConnection=Host=bank_db;Port=5432;Database=bank_db;Username=bank_admin;Password=password;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__PostgresConnection=Host=db;Port=5432;Database=bankdb;Username=postgres;Password=postgrespw
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespw
+      POSTGRES_DB: bankdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
 
 volumes:
   pgdata:

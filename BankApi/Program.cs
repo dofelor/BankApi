@@ -51,15 +51,20 @@ namespace BankApi
             app.UseExceptionHandler();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Включаем Swagger UI всегда, чтобы он был доступен и в контейнере.
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
 
 
             app.MapControllers();
+
+            // Применяем миграции при старте, чтобы создавались таблицы в новой БД
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.Migrate();
+            }
 
             app.Run();
         }
