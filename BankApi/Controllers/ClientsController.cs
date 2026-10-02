@@ -1,11 +1,13 @@
-﻿using BankApi.DTOs.CreateDTOs;
+using BankApi.DTOs.CreateDTOs;
 using BankApi.DTOs.ResponseDTOs;
 using BankApi.DTOs.UpdateDTOs;
 using BankApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ClientsController : ControllerBase
@@ -17,6 +19,7 @@ public class ClientsController : ControllerBase
         _clientService = clientService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<ClientResponseDto>> CreateClient([FromBody]CreateClientDto dto)
     {
@@ -44,10 +47,21 @@ public class ClientsController : ControllerBase
             return BadRequest("Pagination parameters must be greater than 0.");
         }
 
+        var totalCount = await _clientService.GetClientsCountAsync();
+        Response.Headers.Append("X-Total-Count", totalCount.ToString());
+
         var clients = await _clientService.GetClientsAsync(pageNumber, pageSize);
         return Ok(clients);
     }
 
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetClientsCount()
+    {
+        var count = await _clientService.GetClientsCountAsync();
+        return Ok(count);
+    }
+
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ClientResponseDto>> UpdateClient(int id, [FromBody]UpdateClientDto dto)
     {
@@ -58,6 +72,7 @@ public class ClientsController : ControllerBase
         return Ok(updatedClient);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteClient(int id)
     {

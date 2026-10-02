@@ -1,8 +1,9 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BankApi.Data;
 using BankApi.Data.Models;
 using BankApi.DTOs.CreateDTOs;
 using BankApi.DTOs.ResponseDTOs;
+using BankApi.Infrastructure.Exceptions;
 using BankApi.Services.Generators;
 using Microsoft.EntityFrameworkCore;
 
@@ -82,18 +83,18 @@ namespace BankApi.Services
 
             if (account.IsClosed)
             {
-                throw new InvalidOperationException("This account is already closed.");
+                throw new BusinessRuleException("This account is already closed.");
             }
 
             if(account.Balance != 0)
             {
-                throw new InvalidOperationException($"You cannot close an account with a non-zero balance (Current balance: {account.Balance}).");
+                throw new BusinessRuleException($"Cannot close account with a non-zero balance. Current balance: {account.Balance} {account.Currency}. Please transfer or withdraw all funds first.");
             }
 
             bool hasActiveCards = account.Cards.Any(c => !c.IsBlocked);
             if (hasActiveCards)
             {
-                throw new InvalidOperationException("You cannot close an account that has active cards linked to it. Block the cards first.");
+                throw new BusinessRuleException("Cannot close account with active linked cards. Block all cards first, then try again.");
             }
             account.IsClosed = true;
             await _context.SaveChangesAsync();
@@ -104,7 +105,7 @@ namespace BankApi.Services
         {
             if (amount <= 0)
             {
-                throw new InvalidOperationException("Amount must be greater than zero.");
+                throw new ArgumentException("Deposit amount must be greater than zero.", nameof(amount));
             }
 
             var account = await _context.BankAccounts
@@ -112,12 +113,12 @@ namespace BankApi.Services
 
             if (account == null)
             {
-                throw new KeyNotFoundException($"Account with ID = {accountId} not found.");
+                throw new NotFoundException("BankAccount", accountId);
             }
 
             if (account.IsClosed)
             {
-                throw new InvalidOperationException("Cannot add balance to a closed account.");
+                throw new BusinessRuleException("Cannot deposit to a closed account.");
             }
 
             // Обновляем баланс и логируем операцию в рамках одной транзакции

@@ -1,8 +1,9 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BankApi.Data;
 using BankApi.Data.Models;
 using BankApi.DTOs.CreateDTOs;
 using BankApi.DTOs.ResponseDTOs;
+using BankApi.Infrastructure.Exceptions;
 using BankApi.Services.Generators;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,7 @@ namespace BankApi.Services
 
             if (account.IsClosed)
             {
-                throw new InvalidOperationException("Cannot issue a card for a closed bank account.");
+                throw new BusinessRuleException("Cannot issue a card for a closed bank account.");
             }
 
             var card = new Card
@@ -83,7 +84,7 @@ namespace BankApi.Services
 
             if (card.IsBlocked)
             {
-                throw new InvalidOperationException("Card is already blocked.");
+                throw new BusinessRuleException("This card is already blocked.");
             }
 
             card.IsBlocked = true;
@@ -98,7 +99,7 @@ namespace BankApi.Services
 
             if (!card.IsBlocked)
             {
-                throw new InvalidOperationException("Card is not blocked.");
+                throw new BusinessRuleException("This card is not blocked and does not need to be unblocked.");
             }
 
             card.IsBlocked = false;

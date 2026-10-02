@@ -1,6 +1,7 @@
-﻿using BankApi.Data.Models;
+using BankApi.Data.Models;
 using BankApi.Data;
 using BankApi.DTOs;
+using BankApi.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankApi.Services;
@@ -38,12 +39,12 @@ public class TransactionService : ITransactionService
 
             if (fromAccount.Currency != toAccount.Currency)
             {
-                throw new InvalidOperationException($"Transfers between different currencies ({fromAccount.Currency} -> {toAccount.Currency}) are not supported.");
+                throw new BusinessRuleException($"Currency mismatch: sender account is {fromAccount.Currency}, recipient account is {toAccount.Currency}. Cross-currency transfers are not supported.");
             }
 
             if (fromAccount.Balance < dto.Amount)
             {
-                throw new InvalidOperationException("Insufficient funds on the sender's account.");
+                throw new BusinessRuleException($"Insufficient funds. Available: {fromAccount.Balance} {fromAccount.Currency}, requested: {dto.Amount} {fromAccount.Currency}.");
             }
 
             fromAccount.Balance -= dto.Amount;

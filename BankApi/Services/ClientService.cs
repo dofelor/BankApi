@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BankApi.Data;
 using BankApi.Data.Models;
 using BankApi.DTOs.CreateDTOs;
@@ -85,6 +85,11 @@ namespace BankApi.Services
             await _context.SaveChangesAsync();
 
             return _mapper.Map<ClientResponseDto?>(client);
+        }
+
+        public async Task<int> GetClientsCountAsync()
+        {
+            return await _context.Clients.CountAsync();
         }
     }
 }

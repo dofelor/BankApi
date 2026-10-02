@@ -30,5 +30,10 @@ namespace BankApi.Services
 
             return _mapper.Map<List<TransactionLogResponseDto>>(logs);
         }
+
+        public async Task<int> GetLogsCountAsync()
+        {
+            return await _context.TransactionLogs.CountAsync();
+        }
     }
 }

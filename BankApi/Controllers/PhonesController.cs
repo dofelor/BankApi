@@ -1,10 +1,12 @@
-﻿using BankApi.DTOs.CreateDTOs;
+using BankApi.DTOs.CreateDTOs;
 using BankApi.DTOs.ResponseDTOs;
 using BankApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PhonesController : ControllerBase
